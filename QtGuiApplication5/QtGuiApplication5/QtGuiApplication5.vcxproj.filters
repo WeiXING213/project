@@ -45,6 +45,12 @@
     <ClCompile Include="ecaplayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ecaopencvworker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ecaqcvwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="QtGuiApplication5.h">
@@ -54,6 +60,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="ecaplayer.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ecaopencvworker.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ecaqcvwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

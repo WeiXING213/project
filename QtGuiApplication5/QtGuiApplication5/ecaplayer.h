@@ -2,12 +2,8 @@
 #ifndef ECAPLAYER_H
 #define ECAPLAYER_H
 
-#include <QWidget>
 #include <QMediaPlayer>
 #include <QAbstractButton>
-#include <QProgressBar>
-#include <QLineEdit>
-#include <QLabel>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -18,6 +14,9 @@ class QSlider;
 class QVideoProbe;
 class QVideoWidget;
 class QAudioProbe;
+class QLineEdit;
+class QProgressBar;
+class QWidget;
 QT_END_NAMESPACE
 
 class EcaPlayer : public QWidget
@@ -58,6 +57,8 @@ private:
 	QLineEdit *description = nullptr;
 	QLabel *pLabel = nullptr;
 	QAbstractButton *btnSend = nullptr;
+	QAbstractButton *btnSnapShot = nullptr;
+	QLabel *imageLabel = nullptr;
 
 	QMediaPlayer *m_player = nullptr;
 	QMediaPlaylist *m_playlist = nullptr;
