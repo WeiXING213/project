@@ -113,7 +113,7 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 	//progress bar
 	progressBar = new QProgressBar(this);
 	progressBar->setRange(0, 100);
-	progressBar->setValue(12);
+	progressBar->setValue(0);
 	
 	//description line edit
 	pLabel = new QLabel(this);
@@ -154,10 +154,31 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 	setLayout(layout);
 
 	bool ok = connect(btnRecord, SIGNAL(released()), qCvWidget, SLOT(recording()));
-	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect btnRecord.released signal to qCvWidget.recording slot failed");	
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect btnRecord.released signal to qCvWidget.recording slot failed");
+
+	ok = connect(btnRecord, SIGNAL(released()), this, SLOT(recording()));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect btnRecord.released signal to this.recording slot failed");
+
+	ok = connect(qCvWidget, SIGNAL(progressBarValue(int)), progressBar, SLOT(setValue(int)));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect qCvWidget.progressBarValue signal to progressBar.setValue slot failed");
+
+	ok = connect(qCvWidget, SIGNAL(stopRecording()), this, SLOT(stopRecordingSlot()));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect qCvWidget.stopRecording signal to this.stopRecording slot failed");
 }
 
+//TODO use state machine
+void EcaPlayer::recording() {
 
+	btnRecord->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaStop));
+	progressBar->setValue(0);
+}
+
+void EcaPlayer::stopRecordingSlot() {
+	
+	QPixmap pmapRecord(40, 40);
+	pmapRecord.load("images/recording.png");
+	btnRecord->setIcon(QIcon(pmapRecord));
+}
 
 EcaPlayer::~EcaPlayer()
 {

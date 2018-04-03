@@ -27,12 +27,15 @@ signals:
 	void sendToggleSteam();
 	void sendRecoding();
 	void resizeLabel(int width, int height);
+	void progressBarValue(int);
+	void stopRecording();
+	
 
 public slots:
 	void receiveFrame(QImage frame);
 	void receiveToggleStream();
 	void recording();
-	
+	void receiveWriteFileBits(int);
 };
 
 #endif //ECAQCVWIDGET_H

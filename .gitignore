@@ -29,3 +29,7 @@ QtGuiApplication5/x64/Release/QtGuiApplication5.exe
 *.tlog
 QtGuiApplication5/x64/Debug/QtGuiApplication5.exe
 *.obj
+QtGuiApplication5/QtGuiApplication5/x64/Debug/qrc_QtGuiApplication5.obj
+*.obj
+QtGuiApplication5/QtGuiApplication5/x64/Debug/moc_ecaplayer.obj
+QtGuiApplication5/QtGuiApplication5/x64/Debug/main.obj

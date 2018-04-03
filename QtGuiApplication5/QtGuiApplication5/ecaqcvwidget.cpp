@@ -37,6 +37,17 @@ EcaQCvWidget::~EcaQCvWidget() {
 	delete thread;
 }
 
+void EcaQCvWidget::receiveWriteFileBits(int size)
+{
+	int totalValue = 5 ; 
+	float progressValue = (size/totalValue)*100/1024/1024;
+
+	emit progressBarValue(int(progressValue));
+
+	if (progressValue >= 100)
+		emit stopRecording();
+}
+
 void EcaQCvWidget::setup(){
 	
 	thread = new QThread();
@@ -45,20 +56,25 @@ void EcaQCvWidget::setup(){
 	workerTrigger->setInterval(1);
 
 	bool ok = connect(workerTrigger, SIGNAL(timeout()), worker, SLOT(receiveGrabFrame()));
-	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect timeout signal to receiveGrabFrame slot failed");
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect [timeout] signal to [receiveGrabFrame] slot failed");
 
 	ok = connect(this, SIGNAL(sendSetup(int)), worker, SLOT(receiveSetup(int)));
-	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect sendSetup signal to receiveSetup  slot failed");
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect [sendSetup] signal to [receiveSetup]  slot failed");
 
 	ok = connect(worker, SIGNAL(sendFrame(QImage)),  this, SLOT(receiveFrame(QImage)));
-	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect sendFrame signal to mySlot slot failed");
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect [sendFrame] signal to [mySlot] slot failed");
 
 	ok = connect(this, SIGNAL(sendRecoding()), worker, SLOT(recording()));
-	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect sendRecoding signal to recording slot failed");
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect [sendRecoding] signal to [recording] slot failed");
 
 	ok = connect(this, SIGNAL(resizeLabel(int, int)), worker, SLOT(setImageScale(int, int)));
-	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect EcaQCvWidget.resizeLabel signal to worker.setImageScale slot failed");
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect [EcaQCvWidget.resizeLabel] signal to [worker.setImageScale] slot failed");
 
+	ok = connect(worker, SIGNAL(sendWriteFileBits(int)), this, SLOT(receiveWriteFileBits(int)));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect [worker.sendWriteFileBits] signal to [EcaQCvWidget.receiveWriteFileBits] slot failed");
+
+	ok = connect(this, SIGNAL(stopRecording()), worker, SLOT(stopRecording()));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect [this.stopRecroding] signal to [worker.stopRecording] slot failed");
 
 	//TODO: use signal and slot
 	workerTrigger->start();

@@ -25,6 +25,8 @@ private:
 	cv::VideoCapture *cap = nullptr;
 	cv::VideoWriter *videoWriter = nullptr;
 
+	QString outputFileName;
+
 	bool status;
 	bool toggleStream;
 	bool binaryThresholdEnable;
@@ -37,6 +39,11 @@ private:
 	int imageWidth;
 	int imageheight;
 
+	int cap_width;
+	int cap_height;
+
+	bool videoWriter_init;
+
 
 public:
 	explicit EcaOpenCvWorker(QObject *parent = 0);
@@ -44,12 +51,14 @@ public:
 
 signals:
 	void sendFrame(QImage frameProcessed);
+	void sendWriteFileBits(int size);
 
 public slots:
 	void receiveGrabFrame();
 	void receiveSetup(const int device);
 	void receiveToggleStream();
 	void recording();
+	void stopRecording();
 
 	void receiveEnableBinaryThreshold();
 	void receiveBinaryThreshold(int threshold);

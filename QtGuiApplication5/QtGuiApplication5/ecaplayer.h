@@ -24,17 +24,14 @@ class EcaPlayer : public QWidget
 {
 	Q_OBJECT
 
-public:
-	explicit EcaPlayer(QWidget *parent = nullptr);
-	~EcaPlayer();
-	
-
-	/*bool isPlayerAvailable() const;*/
 
 signals:
 	void fullScreenChanged(bool fullScreen);
 
-//public slots:
+public slots:
+	
+	void recording();
+	void stopRecordingSlot();
 	/*void durationChanged(qint64 duration);
 	void positionChanged(qint64 progress);
 	void metaDataChanged();
@@ -53,7 +50,6 @@ private:
 	void setStatusInfo(const QString &info);
 	void handleCursor(QMediaPlayer::MediaStatus status);
 	void updateDurationInfo(qint64 currentInfo);*/
-	
 	EcaQCvWidget *qCvWidget = nullptr;
 	QAbstractButton *btnRecord = nullptr;
 	QProgressBar *progressBar = nullptr;
@@ -80,5 +76,13 @@ private:
 	QString m_trackInfo;
 	QString m_statusInfo;
 	qint64 m_duration;
+
+
+public:
+	explicit EcaPlayer(QWidget *parent = nullptr);
+	~EcaPlayer();
+
+
+	/*bool isPlayerAvailable() const;*/
 };
 #endif // PLAYER_H

@@ -1,7 +1,10 @@
 #include "ecaopencvworker.h"
 #include "qpainter.h"
 #include <QTime>
-
+#include <QFileInfo>
+#include <QDebug>
+#include <time.h>
+#include <ctime>
 
 EcaOpenCvWorker::EcaOpenCvWorker(QObject *parent) :
 	QObject(parent),
@@ -13,16 +16,17 @@ EcaOpenCvWorker::EcaOpenCvWorker(QObject *parent) :
 	cap = new cv::VideoCapture("rtsp://192.168.1.1:9099/stream");
 	
 	//debug
-	int width = (int)cap->get(cv::CAP_PROP_FRAME_WIDTH);
-	int height = (int)cap->get(cv::CAP_PROP_FRAME_HEIGHT);
-	int fps = (int)cap->get(cv::CAP_PROP_FPS);
+	cap_width = (int)cap->get(cv::CAP_PROP_FRAME_WIDTH);
+	cap_height = (int)cap->get(cv::CAP_PROP_FRAME_HEIGHT);
+	//int fps = (int)cap->get(cv::CAP_PROP_FPS);
 	recordingFlag = false;
 	//todo fps, with openCV can't always return good fps
 	
-	videoWriter = new cv::VideoWriter("new.avi", CV_FOURCC('H', '2', '6', '4'), 50, cv::Size(width, height));
-
 	imageWidth = 100;
 	imageheight = 100;
+
+	videoWriter_init = false;
+
 }
 
 EcaOpenCvWorker::~EcaOpenCvWorker()
@@ -35,23 +39,35 @@ void EcaOpenCvWorker::receiveGrabFrame()
 {
 	//if (!toggleStream) return;
 	(*cap) >> _frameOriginal;
-	if (_frameOriginal.empty()) return;
+	//if (_frameOriginal.empty()) return;
 
-	process();
+	//process();
 	
 	cv::Point origin;
 	origin.x = 300;
 	origin.y = 500;
 
-	
 	time_t rawtime;
 	time(&rawtime);
 	char const *time = ctime(&rawtime);
 	cv::putText(_frameOriginal, time, origin, cv::FONT_HERSHEY_COMPLEX, 2, cv::Scalar(0, 255, 255), 2, 8, 0);
 
-	if (recordingFlag)
+	if (recordingFlag){
+		if(videoWriter_init)
+		{
+			QDateTime dt = QDateTime::currentDateTime();
+
+			outputFileName = dt.toString("yyyy_MM_dd_hh_mm_ss").append(".avi");
+		
+			videoWriter_init = false;
+			videoWriter = new cv::VideoWriter(outputFileName.toStdString(), CV_FOURCC('H', '2', '6', '4'), 25, cv::Size(cap_width, cap_height));
+		}
+		
 		videoWriter->write(_frameOriginal);
 
+		QFileInfo info(outputFileName);
+		emit sendWriteFileBits(info.size());
+	}
 
 	cv::cvtColor(_frameOriginal, _frameProcessed, cv::COLORMAP_RAINBOW);
 
@@ -71,7 +87,9 @@ void EcaOpenCvWorker::setImageScale(int width, int height)
 
 
 void EcaOpenCvWorker::recording() {
-	recordingFlag = !recordingFlag;
+	videoWriter_init = true;
+	recordingFlag = true;
+
 }	
 
 void EcaOpenCvWorker::checkIfDeviceAlreadyOpened(const int device) {
@@ -81,10 +99,18 @@ void EcaOpenCvWorker::checkIfDeviceAlreadyOpened(const int device) {
 	*/
 }
 
+void EcaOpenCvWorker::stopRecording() {
+	videoWriter_init = false;
+	recordingFlag = false;
+
+
+	if (videoWriter->isOpened()) {
+		videoWriter->release();
+	}
+}
+
 void EcaOpenCvWorker::process()
 {
-	
-	
 
 	/*if (binaryThresholdEnable) {
 		cv::threshold(_frameOriginal, _frameProcessed, binaryThreshold, 255, cv::THRESH_BINARY);
@@ -115,4 +141,3 @@ void EcaOpenCvWorker::receiveBinaryThreshold(int threshold)
 {
 	binaryThreshold = threshold;
 }
-
