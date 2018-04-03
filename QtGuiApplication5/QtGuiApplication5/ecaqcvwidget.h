@@ -29,6 +29,7 @@ signals:
 	void resizeLabel(int width, int height);
 	void progressBarValue(int);
 	void stopRecording();
+	void descriptionUpdated(const QString &);
 	
 
 public slots:
@@ -36,6 +37,7 @@ public slots:
 	void receiveToggleStream();
 	void recording();
 	void receiveWriteFileBits(int);
+	void descriptionChanged(const QString &);
 };
 
 #endif //ECAQCVWIDGET_H

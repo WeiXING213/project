@@ -164,6 +164,12 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 
 	ok = connect(qCvWidget, SIGNAL(stopRecording()), this, SLOT(stopRecordingSlot()));
 	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect qCvWidget.stopRecording signal to this.stopRecording slot failed");
+
+	ok = connect(btnSend, SIGNAL(released()), this, SLOT(sendDescription()));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect this.btnSend signal to qCvWidget.stopRecordingSlot slot failed");
+
+	ok = connect(this, SIGNAL(textChanged(const QString &)), qCvWidget, SLOT(descriptionChanged(const QString &)));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect error");
 }
 
 //TODO use state machine
@@ -178,6 +184,11 @@ void EcaPlayer::stopRecordingSlot() {
 	QPixmap pmapRecord(40, 40);
 	pmapRecord.load("images/recording.png");
 	btnRecord->setIcon(QIcon(pmapRecord));
+}
+
+void EcaPlayer::sendDescription() {
+	
+	emit textChanged(description->text());
 }
 
 EcaPlayer::~EcaPlayer()

@@ -76,6 +76,9 @@ void EcaQCvWidget::setup(){
 	ok = connect(this, SIGNAL(stopRecording()), worker, SLOT(stopRecording()));
 	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect [this.stopRecroding] signal to [worker.stopRecording] slot failed");
 
+	ok = connect(this, SIGNAL(descriptionUpdated(const QString &)), worker, SLOT(descriptionUpdated(const QString &)));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connection error");
+
 	//TODO: use signal and slot
 	workerTrigger->start();
 	worker->moveToThread(thread);
@@ -100,4 +103,10 @@ void EcaQCvWidget::receiveToggleStream()
 void EcaQCvWidget::recording()
 {
 	emit sendRecoding();
+}
+
+void EcaQCvWidget::descriptionChanged(const QString & text)
+{
+
+	emit descriptionUpdated(text);
 }

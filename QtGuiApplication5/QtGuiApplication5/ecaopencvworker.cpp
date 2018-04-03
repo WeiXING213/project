@@ -27,6 +27,8 @@ EcaOpenCvWorker::EcaOpenCvWorker(QObject *parent) :
 
 	videoWriter_init = false;
 
+	description = QString::null;
+
 }
 
 EcaOpenCvWorker::~EcaOpenCvWorker()
@@ -44,13 +46,21 @@ void EcaOpenCvWorker::receiveGrabFrame()
 	//process();
 	
 	cv::Point origin;
-	origin.x = 300;
-	origin.y = 500;
+	origin.x = 0;
+	origin.y = 900;
 
 	time_t rawtime;
 	time(&rawtime);
 	char const *time = ctime(&rawtime);
-	cv::putText(_frameOriginal, time, origin, cv::FONT_HERSHEY_COMPLEX, 2, cv::Scalar(0, 255, 255), 2, 8, 0);
+	cv::putText(_frameOriginal, time, origin, cv::QT_FONT_NORMAL, 1, cv::Scalar(0, 255, 255), 1, 8, 0);
+
+	//Description
+	if (description != QString::null) {
+		
+		cv::Point origin(900, 900);
+
+		cv::putText(_frameOriginal, description.toStdString(), origin, cv::QT_FONT_NORMAL, 1, cv::Scalar(255, 255, 255), 1, 8, 0);
+	}
 
 	if (recordingFlag){
 		if(videoWriter_init)
@@ -107,6 +117,11 @@ void EcaOpenCvWorker::stopRecording() {
 	if (videoWriter->isOpened()) {
 		videoWriter->release();
 	}
+}
+
+void EcaOpenCvWorker::descriptionUpdated(const QString & text)
+{
+	description = text;
 }
 
 void EcaOpenCvWorker::process()

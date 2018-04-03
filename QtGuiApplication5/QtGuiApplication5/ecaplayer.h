@@ -27,11 +27,14 @@ class EcaPlayer : public QWidget
 
 signals:
 	void fullScreenChanged(bool fullScreen);
+	void textChanged(const QString &);
 
 public slots:
 	
 	void recording();
 	void stopRecordingSlot();
+	void sendDescription();
+	
 	/*void durationChanged(qint64 duration);
 	void positionChanged(qint64 progress);
 	void metaDataChanged();

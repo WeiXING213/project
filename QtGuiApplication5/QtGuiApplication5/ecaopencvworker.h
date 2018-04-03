@@ -43,6 +43,7 @@ private:
 	int cap_height;
 
 	bool videoWriter_init;
+	QString description;
 
 
 public:
@@ -64,6 +65,8 @@ public slots:
 	void receiveBinaryThreshold(int threshold);
 
 	void setImageScale(int width, int height);
+
+	void descriptionUpdated(const QString &);
 };
 
 #endif //ECAOPENCVWORKER_H
