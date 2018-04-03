@@ -13,7 +13,6 @@
 #include "opencv2/core/core.hpp"
 #include <opencv2/video/video.hpp>
 #include "opencv2/highgui/highgui.hpp"
-#include "ecaqcvwidget.h"
 
 using namespace cv;
 
@@ -86,18 +85,22 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 	//capture.release();
 	
 	//streaming
-	m_videoWidget = new QVideoWidget(this);
+	/*m_videoWidget = new QVideoWidget(this);
 	m_player = new QMediaPlayer(this);
 
 	m_player->setMedia(QUrl("rtsp://192.168.1.1:9099/stream"));
 	m_player->setVideoOutput(m_videoWidget);
 	m_player->setVolume(50);
 	m_player->play();
-	m_videoWidget->show();
+	m_videoWidget->show();*/
+
+
+	//steaming display widget
+	qCvWidget = new EcaQCvWidget();
 	
 	QBoxLayout *displayLayout = new QHBoxLayout;
 	displayLayout->setContentsMargins(0, 0, 0, 0);
-	displayLayout->addWidget(m_videoWidget);
+	displayLayout->addWidget(qCvWidget->steamLabel);
 
 	//recording button
 	QPixmap pmapRecord(40, 40);
@@ -127,8 +130,6 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 	btnSnapShot = new QToolButton(this);
 	btnSnapShot->setIcon(iconSnapShot);
 
-	
-
 	//layout
 	QBoxLayout *controlLayout = new QHBoxLayout;
 	controlLayout->setAlignment(Qt::AlignLeft);
@@ -152,10 +153,11 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 	layout->addLayout(controlLayout);
 	setLayout(layout);
 
-	//opencv frame
-	
-
+	bool ok = connect(btnRecord, SIGNAL(released()), qCvWidget, SLOT(recording()));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect btnRecord.released signal to qCvWidget.recording slot failed");	
 }
+
+
 
 EcaPlayer::~EcaPlayer()
 {
