@@ -154,10 +154,10 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 	layout->addLayout(controlLayout);
 	setLayout(layout);
 
-	bool ok = connect(btnRecord, SIGNAL(released()), qCvWidget, SLOT(recording()));
-	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect btnRecord.released signal to qCvWidget.recording slot failed");
+	//bool ok = connect(btnRecord, SIGNAL(released()), qCvWidget, SLOT(recording()));
+	//Q_ASSERT_X(ok, Q_FUNC_INFO, "connect btnRecord.released signal to qCvWidget.recording slot failed");
 
-	ok = connect(btnRecord, SIGNAL(released()), this, SLOT(recording()));
+	bool ok = connect(btnRecord, SIGNAL(released()), this, SLOT(recording()));
 	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect btnRecord.released signal to this.recording slot failed");
 
 	ok = connect(qCvWidget, SIGNAL(progressBarValue(int)), progressBar, SLOT(setValue(int)));
@@ -171,22 +171,48 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 
 	ok = connect(this, SIGNAL(textChanged(const QString &)), qCvWidget, SLOT(descriptionChanged(const QString &)));
 	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect error");
+
+	ok = connect(btnSnapShot, SIGNAL(released()), this, SLOT(receiveSnapShot()));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect error");
+
+	ok = connect(this, SIGNAL(sendSnapshot()), qCvWidget, SLOT(receiveSnapShot()));
+	Q_ASSERT_X(ok, Q_FUNC_INFO, "connect error");
+}
+
+void EcaPlayer::receiveSnapShot() {
+
+	emit sendSnapshot();
+	emit sendShowMessage(tr("Snapshot path :") + description->text(), 5000); //TODO show image path in status bar
 }
 
 //TODO use state machine
 void EcaPlayer::recording() {
 
-	btnRecord->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaStop));
-	progressBar->setValue(0);
+	if (recordingStatus == "start"){
+		//stopRecordingSlot();
+		emit qCvWidget->stopRecording();
+		emit sendShowMessage(tr("Stop Recording : ") + description->text(), 5000);//TODO show recording video path in status bar
+
+		recordingStatus = "stop";
+	}
+	else{
+
+		emit qCvWidget->sendRecoding();
+		btnRecord->setIcon(QApplication::style()->standardIcon(QStyle::SP_MediaStop));
+		progressBar->setValue(0);
+		emit sendShowMessage(tr("Start Recording : ") + description->text(), 5000); //TODO show recording video path in status bar
+
+		recordingStatus = "start";
+	}
 }
 
 void EcaPlayer::stopRecordingSlot() {
-	
+
 	QPixmap pmapRecord(40, 40);
 	pmapRecord.load("images/recording.png");
 	btnRecord->setIcon(QIcon(pmapRecord));
-
 	emit sendShowMessage(tr("Recording stopped"), 5000);
+	recordingStatus = "stop";
 }
 
 void EcaPlayer::sendDescription() {

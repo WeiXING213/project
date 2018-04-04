@@ -1,5 +1,4 @@
 #include "ecaqcvwidget.h"
-#include "ecaopencvworker.h"
 #include <QTimer>
 
 EcaQCvWidget::EcaQCvWidget(QWidget *parent) :
@@ -37,21 +36,12 @@ EcaQCvWidget::~EcaQCvWidget() {
 	delete thread;
 }
 
-void EcaQCvWidget::receiveWriteFileBits(int size)
-{
-	int totalValue = 5 ; 
-	float progressValue = (size/totalValue)*100/1024/1024;
 
-	emit progressBarValue(int(progressValue));
-
-	if (progressValue >= 100)
-		emit stopRecording();
-}
 
 void EcaQCvWidget::setup(){
 	
 	thread = new QThread();
-	EcaOpenCvWorker *worker = new EcaOpenCvWorker();
+	worker = new EcaOpenCvWorker();
 	QTimer *workerTrigger = new QTimer();
 	workerTrigger->setInterval(1);
 
@@ -89,6 +79,18 @@ void EcaQCvWidget::setup(){
 	emit sendSetup(0);
 }
 
+void EcaQCvWidget::receiveWriteFileBits(int size)
+{
+	int totalValue = 5;
+	float progressValue = (size / totalValue) * 100 / 1024 / 1024;
+
+	emit progressBarValue(int(progressValue) % 100 );
+}
+
+void EcaQCvWidget::receiveSnapShot()
+{
+	worker->snapShot();
+}
 
 void EcaQCvWidget::receiveFrame(QImage frame)
 {
@@ -98,11 +100,6 @@ void EcaQCvWidget::receiveFrame(QImage frame)
 void EcaQCvWidget::receiveToggleStream()
 {
 	//SEND TOGGLESTREAM
-}
-
-void EcaQCvWidget::recording()
-{
-	emit sendRecoding();
 }
 
 void EcaQCvWidget::descriptionChanged(const QString & text)

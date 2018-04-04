@@ -15,6 +15,7 @@ class QObject;
 class QImage;
 QT_END_NAMESPACE
 
+
 class EcaOpenCvWorker :public QObject
 {
 	Q_OBJECT
@@ -24,7 +25,8 @@ private:
 	cv::Mat _frameProcessed;
 	cv::VideoCapture *cap = nullptr;
 	cv::VideoWriter *videoWriter = nullptr;
-
+	int recordingFileSize;
+	int recordingSerie;
 	QString outputFileName;
 
 	bool status;
@@ -45,9 +47,13 @@ private:
 	bool videoWriter_init;
 	QString description;
 
+	bool snapshotFlag;
+
 
 public:
 	explicit EcaOpenCvWorker(QObject *parent = 0);
+	void snapShot();
+	QString getCurrentTime() const;
 	~EcaOpenCvWorker();
 
 signals:

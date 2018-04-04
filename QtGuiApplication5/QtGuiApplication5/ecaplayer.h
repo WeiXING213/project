@@ -31,12 +31,14 @@ signals:
 	void textChanged(const QString &);
 	void sendClearMessage();
 	void sendShowMessage(const QString &, int);
+	void sendSnapshot();
 
 public slots:
 	
 	void recording();
 	void stopRecordingSlot();
 	void sendDescription();
+	void receiveSnapShot();
 	
 	/*void durationChanged(qint64 duration);
 	void positionChanged(qint64 progress);
@@ -64,6 +66,7 @@ private:
 	QAbstractButton *btnSend = nullptr;
 	QAbstractButton *btnSnapShot = nullptr;
 	QLabel *imageLabel = nullptr;
+	QString recordingStatus;
 
 	QMediaPlayer *m_player = nullptr;
 	QMediaPlaylist *m_playlist = nullptr;
@@ -82,7 +85,6 @@ private:
 	QString m_trackInfo;
 	QString m_statusInfo;
 	qint64 m_duration;
-
 
 public:
 	explicit EcaPlayer(QWidget *parent = nullptr);
