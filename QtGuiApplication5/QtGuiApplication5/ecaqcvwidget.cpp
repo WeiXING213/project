@@ -9,7 +9,7 @@ EcaQCvWidget::EcaQCvWidget(QWidget *parent) :
 	//label
 	steamLabel = new QLabel();
 	steamLabel->installEventFilter(this);
-
+	//steamLabel->setScaledContents(true); //doesn't work so well 
 	setup();
 	
 
@@ -107,6 +107,5 @@ void EcaQCvWidget::recording()
 
 void EcaQCvWidget::descriptionChanged(const QString & text)
 {
-
 	emit descriptionUpdated(text);
 }

@@ -1,4 +1,4 @@
-#include "QtGuiApplication5.h"
+#include "ecaMainWindow.h"
 #include <QtWidgets/QApplication>
 #include <QPushButton>
 #include <QLayout>
@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 
-	QtGuiApplication5 qt;	
+	EcaMainWindow qt;	
 	qt.setWindowTitle("Eca Robotics");
 	
 	//qt.move(100, 100);

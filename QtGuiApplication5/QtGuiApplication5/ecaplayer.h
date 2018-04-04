@@ -18,6 +18,7 @@ class QAudioProbe;
 class QLineEdit;
 class QProgressBar;
 class QWidget;
+class QStatusBar;
 QT_END_NAMESPACE
 
 class EcaPlayer : public QWidget
@@ -28,6 +29,8 @@ class EcaPlayer : public QWidget
 signals:
 	void fullScreenChanged(bool fullScreen);
 	void textChanged(const QString &);
+	void sendClearMessage();
+	void sendShowMessage(const QString &, int);
 
 public slots:
 	

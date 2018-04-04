@@ -97,7 +97,7 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 
 	//steaming display widget
 	qCvWidget = new EcaQCvWidget();
-	
+
 	QBoxLayout *displayLayout = new QHBoxLayout;
 	displayLayout->setContentsMargins(0, 0, 0, 0);
 	displayLayout->addWidget(qCvWidget->steamLabel);
@@ -146,6 +146,7 @@ EcaPlayer::EcaPlayer(QWidget *parent)
 
 	controlLayout->addStretch();
 
+	
 	//main layout
 	QBoxLayout *layout = new QVBoxLayout;
 	layout->setContentsMargins(0, 0, 0, 0);
@@ -184,11 +185,14 @@ void EcaPlayer::stopRecordingSlot() {
 	QPixmap pmapRecord(40, 40);
 	pmapRecord.load("images/recording.png");
 	btnRecord->setIcon(QIcon(pmapRecord));
+
+	emit sendShowMessage(tr("Recording stopped"), 5000);
 }
 
 void EcaPlayer::sendDescription() {
 	
 	emit textChanged(description->text());
+	emit sendShowMessage(tr("Description update : ") + description->text(), 5000);
 }
 
 EcaPlayer::~EcaPlayer()

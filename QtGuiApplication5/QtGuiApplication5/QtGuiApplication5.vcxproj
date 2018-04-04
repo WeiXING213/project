@@ -120,10 +120,10 @@
     <ClCompile Include="ecaplayercontrols.cpp" />
     <ClCompile Include="ecaqcvwidget.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="QtGuiApplication5.cpp" />
+    <ClCompile Include="ecaMainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="QtGuiApplication5.h" />
+    <QtMoc Include="ecaMainWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="QtGuiApplication5.ui" />
