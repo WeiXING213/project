@@ -1,0 +1,1 @@
+soapcpp2.exe -2 -L -x -i -I ./import;"C:\Users\DEV\source\project\onvif website file\gsoap_2.8.65\gsoap-2.8\gsoap" onvif.h
